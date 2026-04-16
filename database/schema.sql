@@ -1,0 +1,33 @@
+CREATE TABLE IF NOT EXISTS admin (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    username TEXT NOT NULL UNIQUE,
+    password_hash TEXT NOT NULL,
+    created_at TEXT DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS activity (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT NOT NULL,
+    description TEXT,
+    status TEXT DEFAULT 'ongoing',
+    created_at TEXT DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS participant (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    activity_id INTEGER NOT NULL,
+    name TEXT NOT NULL,
+    is_winner INTEGER DEFAULT 0,
+    created_at TEXT DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (activity_id) REFERENCES activity (id) ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS draw_result (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    activity_id INTEGER NOT NULL,
+    participant_id INTEGER NOT NULL,
+    prize_name TEXT NOT NULL,
+    created_at TEXT DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (activity_id) REFERENCES activity (id) ON DELETE CASCADE,
+    FOREIGN KEY (participant_id) REFERENCES participant (id) ON DELETE CASCADE
+);
