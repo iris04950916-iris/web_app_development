@@ -1,0 +1,74 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="row mb-5">
+    <div class="col-12">
+        <div class="glass-card text-center py-5 position-relative overflow-hidden border-2 border-white border-opacity-25 shadow-lg">
+            <div style="position: absolute; top: -50%; left: -10%; width: 50%; height: 200%; background: radial-gradient(circle, rgba(255,255,255,0.1), transparent 60%); pointer-events: none;"></div>
+            <h1 class="display-4 fw-bold">{{ activity.name }}</h1>
+            <p class="lead mt-3 opacity-75 mx-auto" style="max-width: 600px;">{{ activity.description }}</p>
+            <div class="mt-4 pt-3 border-top border-light border-opacity-10 d-inline-block">
+                <a href="{{ url_for('activity.activity_results', id=activity.id) }}" class="btn btn-light text-dark fw-bold px-4 rounded-pill" target="_blank">📈 前往公開開獎看板</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row g-4 pb-5">
+    <!-- 加入參加者區塊 -->
+    <div class="col-lg-4 col-md-6 mb-4">
+        <div class="glass-card h-100 d-flex flex-column">
+            <h4 class="mb-4 fw-bold">➕ 匯入名單</h4>
+            <form method="POST" action="{{ url_for('activity.add_participants', id=activity.id) }}" class="flex-grow-1 d-flex flex-column">
+                <div class="mb-3 flex-grow-1 d-flex flex-column">
+                    <label class="form-label opacity-75 small">輸入名單字串 (使用逗號或換行隔開)</label>
+                    <textarea name="participant_names" class="form-control flex-grow-1 shadow-inner" style="min-height: 200px" required placeholder="張三&#10;李四&#10;王五"></textarea>
+                </div>
+                <button type="submit" class="btn btn-outline-light w-100 fw-bold border-2">加入系統</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- 參加名單列表管理展示 -->
+    <div class="col-lg-4 col-md-6 mb-4">
+        <div class="glass-card h-100 d-flex flex-column">
+            <h4 class="mb-4 fw-bold">📋 名單池 (共 {{ participants|length }} 人)</h4>
+            <div class="flex-grow-1 pe-2" style="overflow-y: auto; max-height: 280px; scrollbar-width: thin; scrollbar-color: rgba(255,255,255,0.4) transparent;">
+                <ul class="list-group list-group-flush bg-transparent">
+                    {% for p in participants %}
+                    <li class="list-group-item bg-transparent text-white border-bottom border-light border-opacity-10 d-flex justify-content-between align-items-center px-0 py-3">
+                        <span class="{{ 'text-warning fw-bold px-2 rounded' if p.is_winner else '' }}" style="{{ 'background: rgba(255,193,7,0.2)' if p.is_winner else '' }}">
+                            {{ p.name }} {% if p.is_winner %}(已中獎){% endif %}
+                        </span>
+                        <form method="POST" action="{{ url_for('activity.delete_participant', activity_id=activity.id, participant_id=p.id) }}" class="m-0">
+                            <button type="submit" class="btn btn-sm btn-danger py-0 px-2 fw-bold opacity-75 hover-opacity-100" onclick="return confirm('確定移除？')">×</button>
+                        </form>
+                    </li>
+                    {% else %}
+                    <li class="list-group-item bg-transparent text-white border-0 text-center opacity-50 mt-5">目前名單庫空缺</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- 大抽獎按鈕區域 -->
+    <div class="col-lg-4 col-12 mb-4">
+        <div class="glass-card h-100 border-3 border-warning position-relative overflow-hidden" style="background: rgba(255, 215, 0, 0.05); box-shadow: 0 0 20px rgba(255, 215, 0, 0.1);">
+            <div class="d-flex flex-column h-100 justify-content-center">
+                <h3 class="text-center text-warning fw-bold mb-4">🎰 抽籤啟動台</h3>
+                <form method="POST" action="{{ url_for('activity.draw_prize', id=activity.id) }}">
+                    <div class="mb-3">
+                        <label class="form-label text-warning fw-semibold">本次抽出獎項</label>
+                        <input type="text" name="prize_name" class="form-control text-warning fw-bold fs-5" required placeholder="範例：頭獎、普獎">
+                    </div>
+                    <div class="mb-4">
+                        <label class="form-label text-warning fw-semibold">連抽數量</label>
+                        <input type="number" name="draw_count" class="form-control fw-bold" value="1" min="1" required>
+                    </div>
+                    <button type="submit" class="btn btn-warning w-100 py-3 fs-4 fw-black shadow-lg border-2 border-white border-opacity-50 text-dark" onclick="return confirm('確定要從未中獎的名單裡執行隨機抽籤嗎？')">🚀 立刻狂抽！</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

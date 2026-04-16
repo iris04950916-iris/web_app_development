@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="text-center py-5 animate-slide-in">
+    <div class="d-inline-block px-4 py-1 rounded-pill mb-3 border border-warning text-warning" style="background: rgba(255, 193, 7, 0.1); backdrop-filter: blur(5px);">
+        LIVE EVENT
+    </div>
+    <h1 class="display-3 fw-bolder text-white mb-2 text-shadow">{{ activity.name }}</h1>
+    <h3 class="fw-light opacity-75 mt-3">🏆 得獎榮譽榜单</h3>
+</div>
+
+<div class="row justify-content-center">
+    <div class="col-md-9 mb-5">
+        <div class="glass-card px-4 py-4 border-warning border-opacity-50">
+            {% if results %}
+            <div class="table-responsive">
+                <table class="table table-borderless text-white align-middle fs-5 mb-0">
+                    <thead>
+                        <tr class="border-bottom border-warning border-opacity-50">
+                            <th class="py-3 ps-4" style="color: #ffd700;">🎖️ 獎別</th>
+                            <th class="py-3 text-center">得主</th>
+                            <th class="py-3 text-end pe-4 opacity-75">開獎時間</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for r in results %}
+                        <tr class="border-bottom border-white border-opacity-10 position-relative" style="transition: all 0.3s; cursor: default;" onmouseover="this.style.backgroundColor='rgba(255,255,255,0.05)'; this.style.transform='scale(1.01)';" onmouseout="this.style.backgroundColor='transparent'; this.style.transform='scale(1)';">
+                            <td class="text-warning fw-bold py-4 ps-4 fs-3">{{ r.prize_name }}</td>
+                            <td class="fw-bolder fs-2 py-4 text-center">{{ r.participant_name }}</td>
+                            <td class="text-end py-4 pe-4 opacity-50 font-monospace small" style="white-space: nowrap;">{{ r.created_at[:16] }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <div class="text-center py-5 my-3">
+                <h2 class="opacity-50 fw-light">獎項即將揭曉...</h2>
+                <div class="spinner-grow text-warning mt-4" style="width: 3rem; height: 3rem;" role="status">
+                  <span class="visually-hidden">Loading...</span>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<style>
+    .text-shadow {
+        text-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    }
+    @keyframes slideIn {
+        from { opacity: 0; transform: translateY(-20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+    .animate-slide-in {
+        animation: slideIn 0.8s ease-out forwards;
+    }
+</style>
+
+<script>
+    // 設定公開看板每隔 8 秒自動刷新取得最新上榜資料！
+    setTimeout(function() {
+        window.location.reload();
+    }, 8000);
+</script>
+{% endblock %}

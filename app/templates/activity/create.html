@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-7">
+        <div class="glass-card mt-4 border-light border-opacity-25 shadow-lg">
+            <h2 class="mb-4 text-center fw-bold">✨ 開始一場新活動</h2>
+            <form method="POST" action="{{ url_for('activity.create_activity') }}">
+                <div class="form-floating mb-4">
+                    <input type="text" name="name" class="form-control pt-4" id="activityName" required placeholder="name">
+                    <label for="activityName" class="text-dark">抽籤活動名稱 <span class="text-danger">*</span></label>
+                </div>
+                <div class="form-floating mb-5">
+                    <textarea name="description" class="form-control" id="activityDesc" style="height: 120px" placeholder="description"></textarea>
+                    <label for="activityDesc" class="text-dark">活動說明 (選填)</label>
+                </div>
+                <div class="d-flex gap-3">
+                    <a href="{{ url_for('activity.dashboard') }}" class="btn btn-outline-light w-50 py-3 fw-bold">取消</a>
+                    <button type="submit" class="btn btn-primary w-50 py-3 fs-5 fw-bold">確認建立</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

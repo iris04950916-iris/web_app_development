@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-5">
+        <div class="glass-card mt-5 shadow-lg">
+            <h2 class="text-center mb-4 fw-bold">系統管理員登入</h2>
+            <form method="POST" action="{{ url_for('auth.login') }}">
+                <div class="mb-3">
+                    <label class="form-label text-light fw-semibold">帳號</label>
+                    <input type="text" name="username" class="form-control py-3" required placeholder="請輸入您的帳號">
+                </div>
+                <div class="mb-4">
+                    <label class="form-label text-light fw-semibold">密碼</label>
+                    <input type="password" name="password" class="form-control py-3" required placeholder="請輸入您的密碼">
+                </div>
+                <button type="submit" class="btn btn-primary w-100 py-3 fs-5">登入繼續使用 <span aria-hidden="true">&rarr;</span></button>
+            </form>
+            <div class="mt-4 text-center opacity-50 small">
+                © 2026 Online Lucky Draw System
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

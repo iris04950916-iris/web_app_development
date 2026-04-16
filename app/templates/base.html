@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>豪華線上抽籤系統</title>
+    <!-- 使用 Bootstrap 5 套件 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    <!-- 根據指令加入一些高級現代化的 CSS 美化 -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #1f1c2c, #928DAB);
+            color: #ffffff;
+            min-height: 100vh;
+        }
+        .navbar {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+        }
+        .navbar-brand, .nav-link { 
+            color: #fff !important; 
+            font-weight: 600;
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(20px);
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+            padding: 2rem;
+            color: #fff;
+            transition: transform 0.3s ease;
+        }
+        .glass-card:hover { transform: translateY(-5px); }
+        .form-control, .form-control:focus {
+            background: rgba(255,255,255,0.2) !important;
+            border: 1px solid rgba(255,255,255,0.4);
+            color: #fff;
+        }
+        .form-control::placeholder { color: rgba(255,255,255,0.6); }
+        .btn-primary {
+            background: linear-gradient(45deg, #FF512F, #DD2476);
+            border: none;
+            font-weight: bold;
+            box-shadow: 0 4px 15px rgba(221, 36, 118, 0.4);
+        }
+        .btn-primary:hover {
+            background: linear-gradient(45deg, #DD2476, #FF512F);
+            transform: scale(1.05);
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg mb-4 shadow-sm">
+        <div class="container">
+            <a class="navbar-brand" href="{{ url_for('activity.dashboard') }}">✨ 幸運抽籤系統</a>
+            <button class="navbar-toggler opacity-50" type="button" data-bs-toggle="collapse" data-bs-target="#navCollapse">
+                <span class="navbar-toggler-icon" style="filter: invert(1)"></span>
+            </button>
+            <div class="collapse navbar-collapse d-flex justify-content-end" id="navCollapse">
+                <ul class="navbar-nav">
+                    {% if session.get('admin_id') %}
+                        <li class="nav-item"><a class="nav-link" href="{{ url_for('activity.dashboard') }}">後台總覽</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{{ url_for('auth.logout') }}">登出系統 ({{ session.get('username') }})</a></li>
+                    {% else %}
+                        <li class="nav-item"><a class="nav-link" href="{{ url_for('auth.login') }}">管理員登入</a></li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <div class="container pb-5">
+        <!-- 系統訊息顯示區 -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category if category != 'error' else 'danger' }} alert-dismissible fade show" role="alert">
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+        
+        <!-- 動態內容區塊 -->
+        {% block content %}{% endblock %}
+    </div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
